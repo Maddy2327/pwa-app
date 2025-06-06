@@ -2,20 +2,28 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f8f9fa;
+  overflow-x: hidden; /* Prevent horizontal scroll due to sidebar sliding */
 }
 
 .container {
   display: flex;
-  min-height: 100vh; /* Changed from height to min-height for content flexibility */
-  flex-direction: row; /* Default for desktop: sidebar on left */
+  min-height: 100vh;
+  /* flex-direction: row; -- Default for desktop already handles this */
+}
+
+/* Sidebar Wrapper for positioning */
+.sidebar-wrapper {
+    width: 250px; /* Fixed width for desktop */
+    flex-shrink: 0;
+    transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
+    z-index: 1000; /* Ensure it's above other content */
+    background-color: #1e3a5f; /* Apply background to wrapper for consistent slide */
 }
 
 .sidebar {
-  width: 250px; /* Fixed width for desktop */
-  background-color: #1e3a5f;
+  /* Removed width, flex-shrink from here as wrapper controls it */
   color: white;
   padding: 20px;
-  flex-shrink: 0; /* Prevent sidebar from shrinking on desktop */
 }
 
 .sidebar h2, .sidebar h4 {
@@ -44,16 +52,27 @@ body {
 }
 
 .content {
-  flex: 1; /* Allows content to take remaining space */
+  flex: 1;
   padding: 30px;
   overflow-x: hidden; /* Prevent horizontal scroll for content */
+  transition: margin-left 0.3s ease-in-out; /* For pushing content if desired */
 }
 
 .topbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Default align to end for desktop */
   align-items: center;
   margin-bottom: 20px;
+  position: relative; /* For positioning hamburger icon */
+}
+
+.mobile-brand {
+    display: none; /* Hidden by default on desktop */
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    position: absolute;
+    left: 0;
 }
 
 .avatar {
@@ -88,7 +107,6 @@ body {
 }
 
 .row span, .row button, .row a {
-  /* Basic styling for row items to prevent them from becoming too small */
   margin-right: 10px; /* Add some spacing between items */
 }
 
@@ -120,55 +138,103 @@ body {
   white-space: nowrap; /* Prevents link text from wrapping */
 }
 
+/* Hamburger Menu styles (hidden by default on desktop) */
+.hamburger-menu {
+  display: none; /* Hidden on desktop */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  position: absolute; /* Position relative to topbar on mobile */
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  z-index: 1001; /* Above sidebar-wrapper when open */
+}
+
+.hamburger-menu .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}
+
 /* --- Responsive Adjustments (Media Queries) --- */
 
 /* For screens smaller than 768px (common tablet portrait / large mobile) */
 @media (max-width: 768px) {
   .container {
-    flex-direction: column; /* Stack sidebar and content vertically */
+    /* No flex-direction change here, as sidebar is now fixed */
+  }
+
+  .sidebar-wrapper {
+    position: fixed; /* Fix sidebar position */
+    top: 0;
+    left: 0; /* Starts hidden off-screen */
+    height: 100vh;
+    width: 250px; /* Still a fixed width for the sliding menu */
+    transform: translateX(-250px); /* Initially hidden off-screen to the left */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    z-index: 999; /* Below hamburger menu */
+  }
+
+  /* When sidebar is open */
+  .sidebar-wrapper.open {
+    transform: translateX(0); /* Slide into view */
   }
 
   .sidebar {
-    width: 100%; /* Sidebar takes full width */
-    height: auto; /* Allow sidebar height to be determined by content */
-    padding-bottom: 0; /* Adjust padding for mobile layout */
+    padding: 20px 10px; /* Adjust padding for mobile sidebar */
   }
 
   .sidebar h2 {
-    text-align: center;
+    text-align: left; /* Keep brand left-aligned in sliding menu */
   }
 
   .menu {
-    display: flex; /* Make menu items horizontal for smaller screens */
-    flex-wrap: wrap; /* Allow menu items to wrap */
-    justify-content: center; /* Center menu items */
+    display: block; /* Stack menu items vertically again in the sliding menu */
     margin-bottom: 15px;
   }
 
   .menu li {
-    margin: 5px 10px; /* Adjust spacing for horizontal menu */
+    margin: 10px 0; /* Revert to vertical spacing */
   }
 
   .menu .sub {
-    /* Hide submenus on smaller screens, or make them expandable with JS */
-    display: none;
+    display: block; /* Show submenus again within the sliding menu if desired */
+    margin-left: 25px; /* Indent submenus */
   }
 
-  .sidebar h4 {
-    display: none; /* Hide resources header on mobile for brevity */
+  .sidebar h4, .menu.resources {
+    display: block; /* Show resources in sliding menu */
   }
 
-  .menu.resources {
-    display: none; /* Hide resources menu on mobile */
-  }
 
   .content {
-    padding: 20px; /* Slightly less padding on smaller screens */
+    padding: 15px; /* Slightly less padding on smaller screens */
+    margin-left: 0; /* No push on mobile */
   }
 
   .topbar {
-    justify-content: space-between; /* Align items to edges on mobile */
-    margin-bottom: 15px;
+    justify-content: flex-end; /* Align user info to right */
+    padding: 10px 15px; /* Add padding to topbar */
+    background-color: #fff; /* Give topbar a background */
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px; /* Adjust margin after topbar */
+    position: sticky; /* Make topbar sticky */
+    top: 0;
+    z-index: 500;
+  }
+
+  .mobile-brand {
+    display: block; /* Show brand on mobile */
+    left: 50px; /* Position next to hamburger */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hamburger-menu {
+    display: block; /* Show hamburger on mobile */
   }
 
   .account-section h1 {
@@ -185,27 +251,29 @@ body {
     margin: 10px 0;
   }
 
-  .row > *:not(.description) { /* Target first span, button, link, etc. */
-    width: 100%; /* Make them take full width */
-    margin-bottom: 5px; /* Add spacing between stacked items */
+  .row > *:not(.description) {
+    width: 100%;
+    margin-bottom: 5px;
+    margin-right: 0; /* Remove horizontal margin */
   }
 
   .description {
-    padding: 5px 0; /* Adjust padding for stacked layout */
-    width: 100%; /* Ensure description takes full width */
+    padding: 5px 0;
+    width: 100%;
+    text-align: left;
   }
 
   .primary-btn, .link-btn {
-    width: 100%; /* Make buttons and links full width */
+    width: 100%;
     text-align: center;
-    margin-top: 10px; /* Add some space above buttons/links when stacked */
+    margin-top: 10px;
   }
 }
 
 /* Further adjustments for very small screens (e.g., less than 480px) */
 @media (max-width: 480px) {
   .content {
-    padding: 15px;
+    padding: 10px;
   }
 
   .account-section h1 {
@@ -214,5 +282,18 @@ body {
 
   .card {
     padding: 10px;
+  }
+
+  .hamburger-menu {
+    top: 5px; /* Adjust for smaller topbar */
+    left: 5px;
+  }
+
+  .topbar {
+    padding: 5px 10px;
+  }
+
+  .mobile-brand {
+    left: 45px;
   }
 }
