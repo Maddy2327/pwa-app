@@ -6,14 +6,16 @@ body {
 
 .container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh; /* Changed from height to min-height for content flexibility */
+  flex-direction: row; /* Default for desktop: sidebar on left */
 }
 
 .sidebar {
-  width: 250px;
+  width: 250px; /* Fixed width for desktop */
   background-color: #1e3a5f;
   color: white;
   padding: 20px;
+  flex-shrink: 0; /* Prevent sidebar from shrinking on desktop */
 }
 
 .sidebar h2, .sidebar h4 {
@@ -42,8 +44,9 @@ body {
 }
 
 .content {
-  flex: 1;
+  flex: 1; /* Allows content to take remaining space */
   padding: 30px;
+  overflow-x: hidden; /* Prevent horizontal scroll for content */
 }
 
 .topbar {
@@ -81,12 +84,23 @@ body {
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
+  flex-wrap: wrap; /* Allows items to wrap to next line on smaller screens */
+}
+
+.row span, .row button, .row a {
+  /* Basic styling for row items to prevent them from becoming too small */
+  margin-right: 10px; /* Add some spacing between items */
+}
+
+.row span:first-child {
+  flex-shrink: 0; /* Prevents the first span (e.g., Email, Password) from shrinking too much */
 }
 
 .description {
   color: #777;
-  flex: 1;
+  flex: 1; /* Allows description to take up available space */
   padding: 0 15px;
+  min-width: 150px; /* Ensures description doesn't become too small */
 }
 
 .primary-btn {
@@ -96,10 +110,109 @@ body {
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap; /* Prevents button text from wrapping */
 }
 
 .link-btn {
   color: #3b82f6;
   text-decoration: none;
   font-weight: 500;
+  white-space: nowrap; /* Prevents link text from wrapping */
+}
+
+/* --- Responsive Adjustments (Media Queries) --- */
+
+/* For screens smaller than 768px (common tablet portrait / large mobile) */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* Stack sidebar and content vertically */
+  }
+
+  .sidebar {
+    width: 100%; /* Sidebar takes full width */
+    height: auto; /* Allow sidebar height to be determined by content */
+    padding-bottom: 0; /* Adjust padding for mobile layout */
+  }
+
+  .sidebar h2 {
+    text-align: center;
+  }
+
+  .menu {
+    display: flex; /* Make menu items horizontal for smaller screens */
+    flex-wrap: wrap; /* Allow menu items to wrap */
+    justify-content: center; /* Center menu items */
+    margin-bottom: 15px;
+  }
+
+  .menu li {
+    margin: 5px 10px; /* Adjust spacing for horizontal menu */
+  }
+
+  .menu .sub {
+    /* Hide submenus on smaller screens, or make them expandable with JS */
+    display: none;
+  }
+
+  .sidebar h4 {
+    display: none; /* Hide resources header on mobile for brevity */
+  }
+
+  .menu.resources {
+    display: none; /* Hide resources menu on mobile */
+  }
+
+  .content {
+    padding: 20px; /* Slightly less padding on smaller screens */
+  }
+
+  .topbar {
+    justify-content: space-between; /* Align items to edges on mobile */
+    margin-bottom: 15px;
+  }
+
+  .account-section h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .row {
+    flex-direction: column; /* Stack row items vertically on small screens */
+    align-items: flex-start; /* Align stacked items to the left */
+    margin: 10px 0;
+  }
+
+  .row > *:not(.description) { /* Target first span, button, link, etc. */
+    width: 100%; /* Make them take full width */
+    margin-bottom: 5px; /* Add spacing between stacked items */
+  }
+
+  .description {
+    padding: 5px 0; /* Adjust padding for stacked layout */
+    width: 100%; /* Ensure description takes full width */
+  }
+
+  .primary-btn, .link-btn {
+    width: 100%; /* Make buttons and links full width */
+    text-align: center;
+    margin-top: 10px; /* Add some space above buttons/links when stacked */
+  }
+}
+
+/* Further adjustments for very small screens (e.g., less than 480px) */
+@media (max-width: 480px) {
+  .content {
+    padding: 15px;
+  }
+
+  .account-section h1 {
+    font-size: 20px;
+  }
+
+  .card {
+    padding: 10px;
+  }
 }
