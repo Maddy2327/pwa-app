@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Details</title>
+  <link rel="stylesheet" href="style.css" />
+  
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>RAPID AIGO</h2>
+      <ul class="menu">
+        <li>Dashboard</li>
+        <li>Usage
+          <ul class="sub">
+            <li>REST</li>
+            <li>WEBSOCKET</li>
+          </ul>
+        </li>
+        <li>Keys</li>
+        <li class="active">Account
+          <ul class="sub">
+            <li class="active">Details</li>
+            <li>Agreement</li>
+            <li>Subscriptions</li>
+            <li>Billing</li>
+            <li>Transactions</li>
+          </ul>
+        </li>
+      </ul>
+      <h4>Resources</h4>
+      <ul class="menu resources">
+        <li>REST Docs</li>
+        <li>Web Sockets</li>
+        <li>Flat Files Docs</li>
+        <li>Tutorials</li>
+        <li>Markets UI</li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <span>xyzzh</span>
+        <span class="avatar">👤</span>
+      </header>
+
+      <section class="account-section">
+        <h1>ACCOUNT</h1>
+        <p>Your Account Authentication Details</p>
+
+        <div class="card">
+          <div class="row">
+            <span>📧 Email</span>
+            <span class="description">will be integrated with user's email</span>
+            <button class="primary-btn">Change</button>
+          </div>
+
+          <div class="row">
+            <span>🔒 Password</span>
+            <span>***************</span>
+            <a href="#" class="link-btn">Reset Password</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <span>💳 Password</span>
+            <a href="#" class="link-btn">Reset Password</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
