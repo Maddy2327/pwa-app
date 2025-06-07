@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Details</title>
+  
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      overflow-x: hidden; /* Prevent horizontal scroll due to sidebar sliding */
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+      /* flex-direction: row; -- Default for desktop already handles this */
+    }
+
+    /* Sidebar Wrapper for positioning */
+    .sidebar-wrapper {
+        width: 250px; /* Fixed width for desktop */
+        flex-shrink: 0;
+        transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
+        z-index: 1000; /* Ensure it's above other content */
+        background-color: #1e3a5f; /* Apply background to wrapper for consistent slide */
+    }
+
+    .sidebar {
+      /* Removed width, flex-shrink from here as wrapper controls it */
+      color: white;
+      padding: 20px;
+    }
+
+    .sidebar h2, .sidebar h4 {
+      margin-bottom: 20px;
+    }
+
+    .menu, .menu .sub {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .menu li {
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .menu li.active, .menu .sub li.active {
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    .menu .sub {
+      margin-left: 15px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-x: hidden; /* Prevent horizontal scroll for content */
+      transition: margin-left 0.3s ease-in-out; /* For pushing content if desired */
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end; /* Default align to end for desktop */
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative; /* For positioning hamburger icon */
+    }
+
+    .mobile-brand {
+        display: none; /* Hidden by default on desktop */
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        position: absolute;
+        left: 0;
+    }
+
+    .avatar {
+      margin-left: 10px;
+      font-size: 24px;
+    }
+
+    .account-section h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .account-section p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      flex-wrap: wrap; /* Allows items to wrap to next line on smaller screens */
+    }
+
+    .row span, .row button, .row a {
+      margin-right: 10px; /* Add some spacing between items */
+    }
+
+    .row span:first-child {
+      flex-shrink: 0; /* Prevents the first span (e.g., Email, Password) from shrinking too much */
+    }
+
+    .description {
+      color: #777;
+      flex: 1; /* Allows description to take up available space */
+      padding: 0 15px;
+      min-width: 150px; /* Ensures description doesn't become too small */
+    }
+
+    .primary-btn {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap; /* Prevents button text from wrapping */
+    }
+
+    .link-btn {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+      white-space: nowrap; /* Prevents link text from wrapping */
+    }
+
+    /* Hamburger Menu styles (hidden by default on desktop) */
+    .hamburger-menu {
+      display: none; /* Hidden on desktop */
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      position: absolute; /* Position relative to topbar on mobile */
+      top: 10px; /* Adjust as needed */
+      left: 10px; /* Adjust as needed */
+      z-index: 1001; /* Above sidebar-wrapper when open */
+    }
+
+    .hamburger-menu .bar {
+      width: 25px;
+      height: 3px;
+      background-color: #333;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+
+    /* --- Responsive Adjustments (Media Queries) --- */
+
+    /* For screens smaller than 768px (common tablet portrait / large mobile) */
+    @media (max-width: 768px) {
+      .container {
+        /* No flex-direction change here, as sidebar is now fixed */
+      }
+
+      .sidebar-wrapper {
+        position: fixed; /* Fix sidebar position */
+        top: 0;
+        left: 0; /* Starts hidden off-screen */
+        height: 100vh;
+        width: 250px; /* Still a fixed width for the sliding menu */
+        transform: translateX(-250px); /* Initially hidden off-screen to the left */
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        z-index: 999; /* Below hamburger menu */
+      }
+
+      /* When sidebar is open */
+      .sidebar-wrapper.open {
+        transform: translateX(0); /* Slide into view */
+      }
+
+      .sidebar {
+        padding: 20px 10px; /* Adjust padding for mobile sidebar */
+      }
+
+      .sidebar h2 {
+        text-align: left; /* Keep brand left-aligned in sliding menu */
+      }
+
+      .menu {
+        display: block; /* Stack menu items vertically again in the sliding menu */
+        margin-bottom: 15px;
+      }
+
+      .menu li {
+        margin: 10px 0; /* Revert to vertical spacing */
+      }
+
+      .menu .sub {
+        display: block; /* Show submenus again within the sliding menu if desired */
+        margin-left: 25px; /* Indent submenus */
+      }
+
+      .sidebar h4, .menu.resources {
+        display: block; /* Show resources in sliding menu */
+      }
+
+
+      .content {
+        padding: 15px; /* Slightly less padding on smaller screens */
+        margin-left: 0; /* No push on mobile */
+      }
+
+      .topbar {
+        justify-content: flex-end; /* Align user info to right */
+        padding: 10px 15px; /* Add padding to topbar */
+        background-color: #fff; /* Give topbar a background */
+        border-bottom: 1px solid #eee;
+        margin-bottom: 15px; /* Adjust margin after topbar */
+        position: sticky; /* Make topbar sticky */
+        top: 0;
+        z-index: 500;
+      }
+
+      .mobile-brand {
+        display: block; /* Show brand on mobile */
+        left: 50px; /* Position next to hamburger */
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .hamburger-menu {
+        display: block; /* Show hamburger on mobile */
+      }
+
+      .account-section h1 {
+        font-size: 24px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .row {
+        flex-direction: column; /* Stack row items vertically on small screens */
+        align-items: flex-start; /* Align stacked items to the left */
+        margin: 10px 0;
+      }
+
+      .row > *:not(.description) {
+        width: 100%;
+        margin-bottom: 5px;
+        margin-right: 0; /* Remove horizontal margin */
+      }
+
+      .description {
+        padding: 5px 0;
+        width: 100%;
+        text-align: left;
+      }
+
+      .primary-btn, .link-btn {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+
+    /* Further adjustments for very small screens (e.g., less than 480px) */
+    @media (max-width: 480px) {
+      .content {
+        padding: 10px;
+      }
+
+      .account-section h1 {
+        font-size: 20px;
+      }
+
+      .card {
+        padding: 10px;
+      }
+
+      .hamburger-menu {
+        top: 5px; /* Adjust for smaller topbar */
+        left: 5px;
+      }
+
+      .topbar {
+        padding: 5px 10px;
+      }
+
+      .mobile-brand {
+        left: 45px;
+      }
+    }
+  </style>
+  
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    
+    <button class="hamburger-menu" aria-label="Toggle Navigation">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </button>
+
+    <div class="sidebar-wrapper">
+        <aside class="sidebar">
+          <h2>RAPID AIGO</h2>
+          <ul class="menu">
+            <li>Dashboard</li>
+            <li>Usage
+              <ul class="sub">
+                <li>REST</li>
+                <li>WEBSOCKET</li>
+              </ul>
+            </li>
+            <li>Keys</li>
+            <li class="active">Account
+              <ul class="sub">
+                <li class="active">Details</li>
+                <li>Agreement</li>
+                <li>Subscriptions</li>
+                <li>Billing</li>
+                <li>Transactions</li>
+              </ul>
+            </li>
+          </ul>
+          <h4>Resources</h4>
+          <ul class="menu resources">
+            <li>REST Docs</li>
+            <li>Web Sockets</li>
+            <li>Flat Files Docs</li>
+            <li>Tutorials</li>
+            <li>Markets UI</li>
+          </ul>
+        </aside>
+    </div>
+
+    <main class="content">
+      <header class="topbar">
+        <span class="mobile-brand">RAPID AIGO</span> 
+        <span>xyzzh</span>
+        <span class="avatar">👤</span>
+      </header>
+
+      <section class="account-section">
+        <h1>ACCOUNT</h1>
+        <p>Your Account Authentication Details</p>
+
+        <div class="card">
+          <div class="row">
+            <span>📧 Email</span>
+            <span class="description">will be integrated with user's email</span>
+            <button class="primary-btn">Change</button>
+          </div>
+
+          <div class="row">
+            <span>🔒 Password</span>
+            <span>***************</span>
+            <a href="#" class="link-btn">Reset Password</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <span>💳 Password</span>
+            <a href="#" class="link-btn">Reset Password</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Change Email button action
+    document.querySelectorAll('.primary-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        alert('Redirecting to email change page...');
+        // You can redirect like this: window.location.href = '/change-email.html';
+      });
+    });
+
+    // Reset password links
+    document.querySelectorAll('.link-btn').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Reset password link sent to your email.');
+      });
+    });
+
+    // (Optional) Toggle submenus in sidebar for desktop behavior
+    // Note: On mobile, submenus are hidden by default in CSS for the sliding menu
+    document.querySelectorAll('.menu > li').forEach(menuItem => {
+      menuItem.addEventListener('click', (event) => {
+        // Prevent the click on a parent item from immediately closing the sidebar on mobile if it opens an item
+        // and also prevent it from triggering the sidebar close if clicking on a sub-item
+        if (window.innerWidth <= 768 && menuItem.closest('.sidebar-wrapper.open')) {
+            // If on mobile and sidebar is open, prevent default behavior if it's a direct menu item click
+            // This stops the sidebar from immediately closing if a menu item should toggle a submenu.
+            event.stopPropagation();
+        }
+
+        const sub = menuItem.querySelector('.sub');
+        if (sub) {
+          // Toggle display for desktop or when submenu needs to be shown in mobile sidebar
+          sub.style.display = sub.style.display === 'block' ? 'none' : 'block';
+        }
+      });
+    });
+
+
+    // NEW: Hamburger menu toggle for mobile sidebar
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const sidebarWrapper = document.querySelector('.sidebar-wrapper');
+    const mainContent = document.querySelector('.content'); // To potentially dim or move main content
+
+    // Ensure elements exist before adding event listeners
+    if (hamburgerMenu && sidebarWrapper && mainContent) {
+        hamburgerMenu.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent this click from being caught by mainContent listener
+            sidebarWrapper.classList.toggle('open');
+            // Optional: Add a class to body to prevent scrolling when sidebar is open
+            document.body.classList.toggle('no-scroll');
+        });
+
+        // Close sidebar when clicking outside (on the main content area)
+        mainContent.addEventListener('click', () => {
+            if (sidebarWrapper.classList.contains('open')) {
+                sidebarWrapper.classList.remove('open');
+                document.body.classList.remove('no-scroll');
+            }
+        });
+
+        // Prevent clicks inside the sidebar from closing it (important if mainContent click closes it)
+        sidebarWrapper.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+  </script>
+</body>
+</html>

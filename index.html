@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RapidAlGO - Real-time Stock APIs</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --text: #ffffff;
+      --card-bg: #1e1e1e;
+      --accent: #3b82f6;
+      --border: #333;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --text: #0b0b0b;
+      --card-bg: #f3f3f3;
+      --accent: #2563eb;
+      --border: #ccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 50px; background: var(--card-bg); border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav h1 { color: var(--accent); font-size: 24px; cursor: default;}
+    nav ul {
+      display: flex; list-style: none; gap: 20px;
+    }
+    nav ul li a {
+      color: var(--text); text-decoration: none; transition: color 0.3s;
+      cursor: pointer;
+    }
+    nav ul li a:hover, nav ul li a.active {
+      color: var(--accent);
+    }
+
+   .theme-toggle {
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+
+    section {
+      padding: 60px 20px 100px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: none;
+    }
+    section.active {
+      display: block;
+    }
+
+    h2, h3, h4 {
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    /* Business & Individuals & Docs content style */
+    p {
+      font-size: 18px;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    .btn {
+      padding: 12px 30px;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 600;
+    }
+    .btn:hover { background-color: #1d4ed8; }
+
+    /* Pricing */
+    .pricing-cards {
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;
+      margin-top: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      width: 260px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--text);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .card h4 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .price {
+      font-size: 28px;
+      color: var(--accent);
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    .card ul {
+      list-style: disc inside;
+      flex-grow: 1;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .card ul li {
+      margin: 8px 0;
+    }
+
+    /* Contact form modal */
+    #contactModal {
+      position: fixed;
+      top: 0; left: 0; right:0; bottom: 0;
+      background-color: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #contactModal.active {
+      display: flex;
+    }
+    #contactModal .modal-content {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+      color: var(--text);
+      position: relative;
+    }
+    #contactModal h3 {
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+    #contactModal form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    #contactModal input, #contactModal textarea {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      resize: vertical;
+    }
+    #contactModal textarea {
+      min-height: 100px;
+    }
+    #contactModal button {
+      background: var(--accent);
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #contactModal button:hover {
+      background: #1d4ed8;
+    }
+    #contactModal .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav {
+        padding: 15px 20px;
+      }
+      nav ul {
+        gap: 12px;
+      }
+      .pricing-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      section {
+        padding: 40px 15px 80px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>RapidAlGO</h1>
+    <ul>
+      <li><a href="#business" class="nav-link active">Business</a></li>
+      <li><a href="#individuals" class="nav-link">Individuals</a></li>
+      <li><a href="#pricing" class="nav-link">Pricing</a></li>
+      <li><a href="#docs" class="nav-link">Docs</a></li>
+    </ul>
+    <div style="display: flex; gap: 12px; align-items: center;">
+  <button class="btn" id="dashboardBtn">Dashboard</button>
+  <button class="theme-toggle" id="themeToggleBtn">🌙</button>
+</div>
+
+  </nav>
+
+  <section id="business" class="active">
+    <h2>Business-Ready Market Intelligence</h2>
+    <p>RapidAlGO helps businesses build high-performance trading platforms, market monitoring dashboards, and data-rich financial apps with real-time, reliable stock market data APIs.</p>
+    <p>Our APIs provide access to live stock prices, historical data, news feeds, and market sentiment analysis to empower your business decisions.</p>
+    <button class="btn" id="talkExpertBtnBusiness">Talk to an Expert</button>
+  </section>
+
+  <section id="individuals">
+    <h2>Empowering Individuals</h2>
+    <p>Whether you are a trader, investor, or financial enthusiast, RapidAlGO delivers the data you need to make informed decisions.</p>
+    <p>Use our APIs to track your favorite stocks, build personalized dashboards, and receive alerts tailored to your portfolio.</p>
+    <button class="btn" id="talkExpertBtnIndividuals">Talk to an Expert</button>
+  </section>
+
+  <section id="pricing">
+    <h2>Pricing Plans</h2>
+    <p>Select the perfect plan that fits your needs and start building your financial applications today.</p>
+
+    <div class="pricing-cards">
+      <div class="card">
+        <h4>Free</h4>
+        <div class="price">$0<span style="font-size: 16px;"> / month</span></div>
+        <ul>
+          <li>Up to 100 API calls/day</li>
+          <li>Access to delayed stock data</li>
+          <li>Email support</li>
+        </ul>
+        <button class="btn select-plan" data-plan="Free">Choose Free</button>
+      </div>
+
+      <div class="card">
+        <h4>Basic</h4>
+        <div class="price">$29<span style="font-size: 16px;"> / month</span></div>
+        <ul>
+          <li>Up to 10,000 API calls/day</li>
+          <li>Real-time stock prices</li>
+          <li>Basic analytics & alerts</li>
+          <li>Email & chat support</li>
+        </ul>
+        <button class="btn select-plan" data-plan="Basic">Choose Basic</button>
+      </div>
+
+      <div class="card">
+        <h4>Standard</h4>
+        <div class="price">$79<span style="font-size: 16px;"> / month</span></div>
+        <ul>
+          <li>Up to 100,000 API calls/day</li>
+          <li>Real-time prices & historical data</li>
+          <li>Advanced analytics & alerts</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn select-plan" data-plan="Standard">Choose Standard</button>
+      </div>
+
+      <div class="card">
+        <h4>Premium</h4>
+        <div class="price">$199<span style="font-size: 16px;"> / month</span></div>
+        <ul>
+          <li>Unlimited API calls</li>
+          <li>All data & analytics features</li>
+          <li>Dedicated account manager</li>
+          <li>24/7 premium support</li>
+        </ul>
+        <button class="btn select-plan" data-plan="Premium">Choose Premium</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="docs">
+    <h2>API Documentation</h2>
+    <p>RapidAlGO's API documentation provides detailed instructions and examples to help you integrate our stock market data into your applications seamlessly.</p>
+    <p>Find endpoints, authentication guides, rate limits, and sample code snippets to get you started quickly.</p>
+    <p>We support RESTful APIs with JSON responses and provide SDKs for multiple programming languages.</p>
+    <button class="btn" id="talkExpertBtnDocs">Talk to an Expert</button>
+  </section>
+
+  <div id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <button class="close-btn" aria-label="Close contact form">&times;</button>
+      <h3 id="modalTitle">Contact Us</h3>
+      <p id="selectedPlanText" style="color: var(--text); font-weight: 600; margin-bottom: 10px;"></p>
+      <form id="contactForm">
+        <input type="text" id="name" name="name" placeholder="Your Full Name" required autocomplete="name" />
+        <input type="email" id="email" name="email" placeholder="Your Email" required autocomplete="email" />
+        <input type="tel" id="phone" name="phone" placeholder="Phone Number (optional)" autocomplete="tel" />
+        <textarea id="message" name="message" placeholder="Your message or questions" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <footer style="text-align:center; padding:20px; color: var(--text); border-top: 1px solid var(--border);">
+    © 2025 RapidAlGO. All rights reserved.
+  </footer>
+
+  <script>
+    // Show correct section on nav link click
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(lnk => lnk.classList.remove('active'));
+        link.classList.add('active');
+        const target = link.getAttribute('href').substring(1);
+        sections.forEach(sec => {
+          sec.classList.toggle('active', sec.id === target);
+        });
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+    });
+
+    // Theme toggle and persistence
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const rootEl = document.documentElement;
+
+    function setTheme(theme) {
+      rootEl.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    }
+
+    // Load saved theme or default dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = rootEl.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      themeToggleBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    });
+    setTheme(savedTheme);
+    themeToggleBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+
+    // Contact modal logic
+    const contactModal = document.getElementById('contactModal');
+    const closeModalBtn = contactModal.querySelector('.close-btn');
+    const selectedPlanText = document.getElementById('selectedPlanText');
+    const contactForm = document.getElementById('contactForm');
+
+    // Open modal with optional plan info
+    function openContactModal(plan = '') {
+      selectedPlanText.textContent = plan ? `You selected the "${plan}" plan.` : '';
+      contactModal.classList.add('active');
+      // Focus first input for accessibility
+      contactForm.querySelector('input').focus();
+    }
+
+    // Close modal function
+    function closeContactModal() {
+      contactModal.classList.remove('active');
+      contactForm.reset();
+    }
+
+    closeModalBtn.addEventListener('click', closeContactModal);
+    // Close modal when clicking outside modal content
+    contactModal.addEventListener('click', (e) => {
+      if (e.target === contactModal) closeContactModal();
+    });
+
+    // Open modal on Talk to Expert buttons
+    document.getElementById('talkExpertBtnBusiness').addEventListener('click', () => openContactModal());
+    document.getElementById('talkExpertBtnIndividuals').addEventListener('click', () => openContactModal());
+    document.getElementById('talkExpertBtnDocs').addEventListener('click', () => openContactModal());
+
+    // Open modal on pricing plan selection, passing plan name
+    const selectPlanButtons = document.querySelectorAll('.select-plan');
+    selectPlanButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const planName = btn.getAttribute('data-plan');
+        openContactModal(planName);
+      });
+    });
+
+    // Handle form submission
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      // You can handle submission here (send data to server, email, etc.)
+      // For demo, we just show an alert and close modal
+
+      alert(`Thank you, ${contactForm.name.value}! We will contact you soon.`);
+      closeContactModal();
+    });
+
+    // Get the Dashboard button
+    const dashboardBtn = document.getElementById('dashboardBtn');
+
+    // Add event listener to the Dashboard button
+    if (dashboardBtn) {
+      dashboardBtn.addEventListener('click', () => {
+        window.location.href = 'sindex.html'; // Redirect to sindex.html
+      });
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+</script>
+</body>
+</html>
