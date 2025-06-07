@@ -6,6 +6,7 @@
   <title>Account Details</title>
   
   <style>
+    /* Base styles */
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -13,10 +14,14 @@
       overflow-x: hidden; /* Prevent horizontal scroll due to sidebar sliding */
     }
 
+    /* Prevents background scrolling when mobile sidebar is open */
+    body.no-scroll {
+        overflow: hidden;
+    }
+
     .container {
       display: flex;
       min-height: 100vh;
-      /* flex-direction: row; -- Default for desktop already handles this */
     }
 
     /* Sidebar Wrapper for positioning */
@@ -29,34 +34,88 @@
     }
 
     .sidebar {
-      /* Removed width, flex-shrink from here as wrapper controls it */
       color: white;
       padding: 20px;
+      height: 100%; /* Ensure sidebar takes full height of wrapper */
+      overflow-y: auto; /* Enable scrolling if menu content exceeds height */
     }
 
     .sidebar h2, .sidebar h4 {
       margin-bottom: 20px;
+      /* Ensure text is not cut off, particularly for mobile */
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .menu, .menu .sub {
+    .menu {
       list-style: none;
       padding-left: 0;
     }
 
     .menu li {
-      margin: 10px 0;
+      margin: 0; /* Reset default margin */
       cursor: pointer;
+      padding: 12px 0; /* Increased padding for better touch targets */
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Space out text and arrow */
+      transition: background-color 0.2s ease; /* Smooth hover effect */
+      color: white; /* Ensure consistent text color */
     }
 
-    .menu li.active, .menu .sub li.active {
+    .menu li:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+    }
+
+    .menu li.active {
       font-weight: bold;
-      color: #38bdf8;
+      color: #38bdf8; /* Active link color */
     }
 
+    /* Submenu styling */
     .menu .sub {
-      margin-left: 15px;
+      list-style: none;
+      padding-left: 0; /* Reset default padding */
+      margin-left: 15px; /* Indent submenus */
       font-size: 14px;
       color: #cbd5e1;
+      max-height: 0; /* Initially hidden with 0 height */
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth slide-down */
+      opacity: 0; /* Start invisible */
+    }
+
+    .menu .sub.open {
+      max-height: 200px; /* Adjust based on max expected submenu height */
+      opacity: 1; /* Fully visible */
+    }
+
+    .menu .sub li {
+      padding: 8px 0; /* Smaller padding for sub-items */
+      color: #cbd5e1; /* Sub-item color */
+      font-weight: normal; /* Reset font-weight */
+    }
+
+    .menu .sub li.active {
+        font-weight: bold;
+        color: #38bdf8;
+    }
+
+    /* Arrow icon for expandable menu items */
+    .menu li .arrow {
+        margin-left: 10px;
+        transition: transform 0.3s ease;
+        display: inline-block; /* Ensure it respects positioning */
+        font-size: 16px; /* Adjust size as needed */
+    }
+
+    .menu li.has-submenu.expanded .arrow {
+        transform: rotate(90deg); /* Rotate arrow when expanded */
+    }
+    
+    .menu li span {
+        flex-grow: 1; /* Allows text to take up space */
     }
 
     .content {
@@ -171,10 +230,6 @@
 
     /* For screens smaller than 768px (common tablet portrait / large mobile) */
     @media (max-width: 768px) {
-      .container {
-        /* No flex-direction change here, as sidebar is now fixed */
-      }
-
       .sidebar-wrapper {
         position: fixed; /* Fix sidebar position */
         top: 0;
@@ -192,31 +247,29 @@
       }
 
       .sidebar {
-        padding: 20px 10px; /* Adjust padding for mobile sidebar */
+        padding: 20px 15px; /* Adjust padding for mobile sidebar */
       }
 
       .sidebar h2 {
         text-align: left; /* Keep brand left-aligned in sliding menu */
       }
-
+      
+      /* Ensure menu items stack correctly in mobile sidebar */
       .menu {
-        display: block; /* Stack menu items vertically again in the sliding menu */
-        margin-bottom: 15px;
+        display: block; 
       }
 
       .menu li {
-        margin: 10px 0; /* Revert to vertical spacing */
+        margin: 0; /* Ensure no extra margins from desktop styles */
       }
 
       .menu .sub {
-        display: block; /* Show submenus again within the sliding menu if desired */
-        margin-left: 25px; /* Indent submenus */
+        margin-left: 25px; /* Indent submenus for clarity */
       }
 
       .sidebar h4, .menu.resources {
         display: block; /* Show resources in sliding menu */
       }
-
 
       .content {
         padding: 15px; /* Slightly less padding on smaller screens */
@@ -328,36 +381,37 @@
     </button>
 
     <div class="sidebar-wrapper">
-        <aside class="sidebar">
-          <h2>RAPID AIGO</h2>
-          <ul class="menu">
-            <li>Dashboard</li>
-            <li>Usage
-              <ul class="sub">
-                <li>REST</li>
-                <li>WEBSOCKET</li>
-              </ul>
-            </li>
-            <li>Keys</li>
-            <li class="active">Account
-              <ul class="sub">
-                <li class="active">Details</li>
-                <li>Agreement</li>
-                <li>Subscriptions</li>
-                <li>Billing</li>
-                <li>Transactions</li>
-              </ul>
-            </li>
-          </ul>
-          <h4>Resources</h4>
-          <ul class="menu resources">
-            <li>REST Docs</li>
-            <li>Web Sockets</li>
-            <li>Flat Files Docs</li>
-            <li>Tutorials</li>
-            <li>Markets UI</li>
-          </ul>
-        </aside>
+      <aside class="sidebar">
+        <h2>RAPID AIGO</h2>
+        <ul class="menu">
+          <li><span>Dashboard</span></li>
+          <li class="has-submenu">
+            <span>Usage</span>
+            <span class="arrow">&#9654;</span> <ul class="sub">
+              <li>REST</li>
+              <li>WEBSOCKET</li>
+            </ul>
+          </li>
+          <li><span>Keys</span></li>
+          <li class="active has-submenu">
+            <span>Account</span>
+            <span class="arrow">&#9654;</span> <ul class="sub open"> <li class="active">Details</li>
+              <li>Agreement</li>
+              <li>Subscriptions</li>
+              <li>Billing</li>
+              <li>Transactions</li>
+            </ul>
+          </li>
+        </ul>
+        <h4>Resources</h4>
+        <ul class="menu resources">
+          <li><span>REST Docs</span></li>
+          <li><span>Web Sockets</span></li>
+          <li><span>Flat Files Docs</span></li>
+          <li><span>Tutorials</span></li>
+          <li><span>Markets UI</span></li>
+        </ul>
+      </aside>
     </div>
 
     <main class="content">
@@ -411,28 +465,8 @@
       });
     });
 
-    // (Optional) Toggle submenus in sidebar for desktop behavior
-    // Note: On mobile, submenus are hidden by default in CSS for the sliding menu
-    document.querySelectorAll('.menu > li').forEach(menuItem => {
-      menuItem.addEventListener('click', (event) => {
-        // Prevent the click on a parent item from immediately closing the sidebar on mobile if it opens an item
-        // and also prevent it from triggering the sidebar close if clicking on a sub-item
-        if (window.innerWidth <= 768 && menuItem.closest('.sidebar-wrapper.open')) {
-            // If on mobile and sidebar is open, prevent default behavior if it's a direct menu item click
-            // This stops the sidebar from immediately closing if a menu item should toggle a submenu.
-            event.stopPropagation();
-        }
+    // --- NEW / MODIFIED JS FOR MOBILE SIDEBAR MENU ---
 
-        const sub = menuItem.querySelector('.sub');
-        if (sub) {
-          // Toggle display for desktop or when submenu needs to be shown in mobile sidebar
-          sub.style.display = sub.style.display === 'block' ? 'none' : 'block';
-        }
-      });
-    });
-
-
-    // NEW: Hamburger menu toggle for mobile sidebar
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const sidebarWrapper = document.querySelector('.sidebar-wrapper');
     const mainContent = document.querySelector('.content'); // To potentially dim or move main content
@@ -442,8 +476,7 @@
         hamburgerMenu.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent this click from being caught by mainContent listener
             sidebarWrapper.classList.toggle('open');
-            // Optional: Add a class to body to prevent scrolling when sidebar is open
-            document.body.classList.toggle('no-scroll');
+            document.body.classList.toggle('no-scroll'); // Toggle no-scroll class on body
         });
 
         // Close sidebar when clicking outside (on the main content area)
@@ -459,6 +492,57 @@
             e.stopPropagation();
         });
     }
+
+    // Toggle submenus with smooth transition and arrow rotation
+    document.querySelectorAll('.menu > li.has-submenu').forEach(menuItem => {
+      menuItem.addEventListener('click', (event) => {
+        // Find the submenu and toggle its 'open' class
+        const sub = menuItem.querySelector('.sub');
+        if (sub) {
+          sub.classList.toggle('open');
+          // Toggle 'expanded' class on parent for arrow rotation
+          menuItem.classList.toggle('expanded');
+        }
+        // Optional: If you click on a parent that only toggles a submenu,
+        // prevent it from immediately closing the sidebar if it was mobile.
+        if (window.innerWidth <= 768 && event.target === menuItem) {
+             event.stopPropagation();
+        }
+      });
+    });
+
+    // Handle clicks on actual menu items (both main and sub-items)
+    document.querySelectorAll('.menu li:not(.has-submenu) span, .menu .sub li').forEach(item => {
+        item.addEventListener('click', (event) => {
+            // Remove 'active' from all menu items first
+            document.querySelectorAll('.menu li, .menu .sub li').forEach(li => {
+                li.classList.remove('active');
+            });
+
+            // Add 'active' to the clicked item
+            // For sub-items, 'item' itself is the li. For main items, the parent li needs active.
+            if (item.tagName === 'LI') {
+                item.classList.add('active');
+            } else { // It's a span inside an li
+                item.closest('li').classList.add('active');
+            }
+
+            // Also, ensure the parent 'Account' or 'Usage' is marked active if a sub-item is active
+            const parentSubmenu = item.closest('.sub');
+            if (parentSubmenu) {
+                parentSubmenu.closest('li.has-submenu').classList.add('active');
+            }
+
+            // If on mobile, close the sidebar after a menu item is clicked
+            if (window.innerWidth <= 768 && sidebarWrapper.classList.contains('open')) {
+                sidebarWrapper.classList.remove('open');
+                document.body.classList.remove('no-scroll');
+            }
+            // Add any navigation logic here if needed (e.g., load content dynamically)
+            console.log('Menu item clicked:', event.target.textContent.trim());
+        });
+    });
+
   </script>
 </body>
 </html>
