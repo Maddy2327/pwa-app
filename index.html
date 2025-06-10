@@ -389,6 +389,8 @@
 </head>
 <body>
   <nav>
+    <button class="btn" id="loginBtn">Login / Signup</button>
+<button class="btn" id="dashboardBtn" style="display: none;">Dashboard</button>
     <h1>RapidAlGO</h1>
     <ul id="desktop-nav">
       <li><a href="#business" class="nav-link active">Business</a></li>
@@ -635,6 +637,21 @@
 
     // Get the Dashboard button
     const dashboardBtn = document.getElementById('dashboardBtn');
+    const loginBtn = document.getElementById('loginBtn');
+
+loginBtn.addEventListener('click', () => {
+  const username = prompt("Enter your username:");
+  const password = prompt("Enter your password:");
+
+  if (username && password) {
+    alert(`Welcome, ${username}!`);
+    loginBtn.style.display = 'none';
+    dashboardBtn.style.display = 'inline-block';
+  } else {
+    alert("Login failed. Please enter both username and password.");
+  }
+});
+
 
     // Add event listener to the Dashboard button
     if (dashboardBtn) {
