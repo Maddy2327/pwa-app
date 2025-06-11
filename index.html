@@ -296,6 +296,17 @@
     background: #1d4ed8;
   }
 }
+.desktop-auth {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .desktop-auth {
+    display: none;
+  }
+}
+
 
   </style>
 </head>
@@ -312,6 +323,11 @@
   <li class="mobile-only"><button class="btn menu-login">Log in</button></li>
   <li class="mobile-only"><button class="btn menu-signup">Sign up</button></li>
   </ul>
+  <div class="desktop-auth">
+  <a href="/login" class="btn">Login</a>
+  <a href="/signup" class="btn">Signup</a>
+</div>
+
   <button class="theme-toggle" id="themeToggleBtn">🌙</button>
 </nav>
 
