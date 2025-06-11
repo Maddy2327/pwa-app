@@ -267,28 +267,85 @@
       .dropdown { display: flex; }
       .pricing-cards { flex-direction: column; align-items: center; }
     }
+    nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-menu li a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  .nav-menu {
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    background: var(--card-bg);
+    display: none;
+    gap: 15px;
+    padding: 20px;
+    z-index: 99;
+  }
+  .nav-menu.active {
+    display: flex;
+  }
+  .nav-menu li {
+    text-align: center;
+  }
+  .login-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
   </style>
 </head>
+<nav>
+  <h1>RapidAIGO</h1>
+  <button class="hamburger" aria-label="Toggle menu">☰</button>
+  <ul class="nav-menu">
+    <li><a href="#business" class="nav-link">Business</a></li>
+    <li><a href="#individuals" class="nav-link">Individuals</a></li>
+    <li><a href="#pricing" class="nav-link">Pricing</a></li>
+    <li><a href="#docs" class="nav-link">Docs</a></li>
+    <li><a href="#" class="btn login-btn">Login / Signup</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggleBtn">🌙</button>
+</nav>
+
 <body>
-  <nav>
-    <h1>RapidAlGO</h1>
-    <ul class="desktop-nav" id="desktopNav">
-      <li><a href="#business" class="nav-link active">Business</a></li>
-      <li><a href="#individuals" class="nav-link">Individuals</a></li>
-      <li><a href="#pricing" class="nav-link">Pricing</a></li>
-      <li><a href="#docs" class="nav-link">Docs</a></li>
-    </ul>
-    <button class="menu-toggle" onclick="toggleDropdown()">☰</button>
-    <div class="dropdown" id="mobileMenu">
-      <a href="#business" class="nav-link">Business</a>
-      <a href="#individuals" class="nav-link">Individuals</a>
-      <a href="#pricing" class="nav-link">Pricing</a>
-      <a href="#docs" class="nav-link">Docs</a>
-    </div>
-    <button class="btn" id="loginBtn">Login / Signup</button>
-    <button class="btn" id="dashboardBtn" style="display: none;">Dashboard</button>
-    <button class="theme-toggle" id="themeToggleBtn">🌙</button>
-  </nav>
 
   <section id="business" class="active">
     <h2>Business-Ready Market Intelligence</h2>
@@ -383,9 +440,8 @@
   </footer>
   <script>
     function toggleDropdown() {
-      const dropdown = document.getElementById('mobileMenu');
-      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
+    document.getElementById('mobileMenu').classList.toggle('active');
+  }
 
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const rootEl = document.documentElement;
@@ -404,21 +460,21 @@
       localStorage.setItem('theme', theme);
     }
 
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
-    navLinks.forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = link.getAttribute('href').substring(1);
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        sections.forEach(sec => {
-          sec.classList.toggle('active', sec.id === target);
-        });
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        document.getElementById('mobileMenu').style.display = 'none';
+     const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section');
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = link.getAttribute('href').substring(1);
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      sections.forEach(sec => {
+        sec.classList.toggle('active', sec.id === target);
       });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('mobileMenu').classList.remove('active');
     });
+  });
 
     // Dashboard/Login logic
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -480,6 +536,14 @@
           .catch(err => console.error('Service Worker registration failed:', err));
       });
     }
+    // Hamburger menu toggle
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+
+hamburger.addEventListener('click', () => {
+  navMenu.classList.toggle('active');
+});
+
   </script>
 </body>
 </html>
