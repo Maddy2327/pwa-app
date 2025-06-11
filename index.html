@@ -266,6 +266,36 @@
 .card ul li {
   margin: 8px 0;
 }
+/* Mobile-only login/signup styling */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .menu-login,
+  .menu-signup {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  .menu-login:hover,
+  .menu-signup:hover {
+    background: #1d4ed8;
+  }
+}
 
   </style>
 </head>
@@ -279,7 +309,8 @@
     <li><a href="#individuals" class="nav-link">Individuals</a></li>
     <li><a href="#pricing" class="nav-link">Pricing</a></li>
     <li><a href="#docs" class="nav-link">Docs</a></li>
-    <li><a href="#" class="btn login-btn">Login / Signup</a></li>
+  <li class="mobile-only"><button class="btn menu-login">Log in</button></li>
+  <li class="mobile-only"><button class="btn menu-signup">Sign up</button></li>
   </ul>
   <button class="theme-toggle" id="themeToggleBtn">🌙</button>
 </nav>
@@ -478,6 +509,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+document.querySelector('.menu-login')?.addEventListener('click', () => {
+  window.location.href = '/login';
+});
+
+document.querySelector('.menu-signup')?.addEventListener('click', () => {
+  window.location.href = '/signup';
+});
+
 </script>
 </body>
 </html>
