@@ -1,0 +1,153 @@
+/* Login Page Specific Styles - src/assets/login.css */
+
+.login-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  max-width: 1000px;
+  margin: auto; /* Centers the container horizontally */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--card-bg); /* Use theme variable */
+  color: var(--text); /* Use theme variable */
+  min-height: calc(100vh - 120px); /* Adjust based on navbar/footer height */
+}
+
+.login-left {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 500px;
+  background: var(--card-bg); /* Use theme variable */
+  color: var(--text); /* Use theme variable */
+}
+
+.login-left h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: var(--accent); /* Use theme variable */
+}
+
+.login-left p {
+  margin-bottom: 30px;
+  font-size: 14px;
+  color: var(--text); /* Use theme variable */
+}
+
+.login-left a {
+  color: var(--accent); /* Use theme variable */
+  text-decoration: underline;
+}
+
+form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text); /* Use theme variable */
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border); /* Use theme variable */
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--bg); /* Use theme variable */
+  color: var(--text); /* Use theme variable */
+}
+
+.password-group {
+  position: relative;
+}
+
+.password-group .toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 40px;
+  cursor: pointer;
+  color: var(--text); /* Use theme variable */
+}
+
+.forgot {
+  text-align: right;
+  margin-bottom: 20px;
+}
+.forgot a {
+  color: var(--accent); /* Use theme variable */
+}
+
+/* Specific button styles for login page */
+.btn.primary { /* Targeted to ensure specific primary button styles */
+  background: var(--accent); /* Use theme variable */
+  color: white; /* Keep white for contrast on accent */
+}
+
+.btn.go { /* Targeted for Google button */
+  background: var(--card-bg); /* Use theme variable */
+  color: var(--text); /* Use theme variable */
+  border: 1px solid var(--border); /* Use theme variable */
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border); /* Use theme variable */
+}
+
+.divider span {
+  padding: 0 10px;
+  background: var(--card-bg); /* Use theme variable */
+  color: var(--text); /* Use theme variable */
+  font-size: 14px;
+  z-index: 1;
+}
+
+.login-right {
+  flex: 1;
+  background: var(--bg); /* Use theme variable */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: var(--text); /* Use theme variable */
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    /* Removed margin: 20px auto; as it's better handled by App.css for overall page spacing if needed */
+    /* If you still need specific top/bottom margin for login/signup on mobile, re-add here */
+    margin-left: auto; /* Ensure horizontal centering */
+    margin-right: auto; /* Ensure horizontal centering */
+    width: 90%; /* Adjust width for better fit on small screens */
+    max-width: 450px; /* Limit max width even on mobile */
+  }
+
+  .login-left {
+    padding: 30px; /* Consistent padding with signup page on mobile */
+    max-width: none; /* Allow it to take full width of container */
+    width: 100%;
+  }
+
+  .login-right {
+    display: none; /* Hide logo on mobile for smaller form */
+  }
+}
