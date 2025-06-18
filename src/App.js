@@ -1,30 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css'; // Your existing CSS for layout and styling
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
 
-// ====================================================================
-// PAGE COMPONENTS - Import them here
+// Component imports
+import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
-import BusinessPage from './components/BusinessPage';
-import IndividualsPage from './components/IndividualsPage';
-import PricingPage from './components/PricingPage';
-import DocsPage from './components/DocsPage'; // This is your main API Documentation section
-// ====================================================================
 
 function App() {
-  // State for custom alert/message modal (for form submission success/error)
+  // State for custom alert/message modal
   const [messageModalActive, setMessageModalActive] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  // State for the main contact form modal (the "Talk to an Expert" modal)
+  // State for the main contact form modal
   const [contactModalActive, setContactModalActive] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(''); // To display which plan was selected in the modal
+  const [selectedPlan, setSelectedPlan] = useState('');
 
-  // NEW STATE: State to control mobile navigation menu visibility
-  const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
-
-  // Function to show custom message modal (after form submission)
+  // Function to show custom message modal
   const showMessageModal = (message) => {
     setModalMessage(message);
     setMessageModalActive(true);
@@ -36,30 +29,24 @@ function App() {
     setModalMessage('');
   };
 
-  // Function to open the main contact modal (passed as prop to page components)
+  // Function to open the main contact modal
   const openContactModal = (plan = '') => {
-    setSelectedPlan(plan); // Set selected plan if coming from pricing, otherwise empty
-    setContactModalActive(true); // Activate the contact modal
+    setSelectedPlan(plan);
+    setContactModalActive(true);
   };
 
   // Function to close the main contact modal
   const closeContactModal = () => {
-    setContactModalActive(false); // Deactivate the contact modal
-    setSelectedPlan(''); // Clear selected plan
-    // Reset the form if needed (we're still using DOM manipulation for this for simplicity)
+    setContactModalActive(false);
+    setSelectedPlan('');
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
       contactForm.reset();
     }
   };
 
-  // Function to close the mobile navigation menu
-  const closeNavMenu = () => {
-    setIsNavMenuOpen(false);
-  };
-
   useEffect(() => {
-    // --- Theme Toggle Logic ---
+    // Theme Toggle Logic
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const rootEl = document.documentElement;
 
@@ -80,22 +67,15 @@ function App() {
       };
     }
 
-    // --- Cleanup for Hamburger Menu (removed direct DOM manipulation for menu state) ---
-    // The hamburger click handler will now directly update `isNavMenuOpen` state,
-    // so no need for an event listener here anymore for toggling 'active' class on navMenu.
-    // The link click handlers will also update state directly.
-
-    // Cleanup for theme toggle
     return () => {
       if (themeToggleBtn) {
         themeToggleBtn.onclick = null;
       }
     };
-  }, []); // Runs once on mount
-
+  }, []);
 
   useEffect(() => {
-    // --- Contact Form Submission Logic ---
+    // Contact Form Submission Logic
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
       const handleSubmit = (e) => {
@@ -111,57 +91,17 @@ function App() {
     }
   }, [showMessageModal, closeContactModal]);
 
-
   return (
     <Router>
       <div className="App">
-        {/* ====================================================== */}
-        {/* Header/Navbar - Use Link for internal navigation */}
-        <nav>
-          <h1>RapidAIGO</h1>
-          {/* Hamburger button now toggles isNavMenuOpen state */}
-          <button className="hamburger" aria-label="Toggle menu" onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}>☰</button>
-          {/* Nav menu class is now conditional based on isNavMenuOpen state */}
-          <ul className={`nav-menu ${isNavMenuOpen ? 'active' : ''}`}>
-            {/* Each Link now calls closeNavMenu to hide the menu */}
-            <li><Link to="/business" className="nav-link" onClick={closeNavMenu}>Business</Link></li>
-            <li><Link to="/individuals" className="nav-link" onClick={closeNavMenu}>Individuals</Link></li>
-            <li><Link to="/pricing" className="nav-link" onClick={closeNavMenu}>Pricing</Link></li>
-            <li><Link to="/docs" className="nav-link" onClick={closeNavMenu}>Docs</Link></li>
-            {/* START: NEW structure for mobile-only auth buttons */}
-            {/* This single LI will be a flex container on mobile to arrange buttons horizontally */}
-            <li className="mobile-only mobile-auth-container">
-              <Link to="/login" className="btn menu-login" onClick={closeNavMenu}>Log in</Link>
-              <Link to="/signup" className="btn menu-signup" onClick={closeNavMenu}>Sign up</Link>
-            </li>
-            {/* END: NEW structure for mobile-only auth buttons */}
-          </ul>
-          {/* Desktop auth buttons (will be hidden on mobile by CSS) */}
-          <div className="desktop-auth">
-            <Link to="/login" className="btn">Login</Link>
-            <Link to="/signup" className="btn">Signup</Link>
-          </div>
-          <button className="theme-toggle" id="themeToggleBtn">🌙</button>
-        </nav>
-        {/* ====================================================== */}
-
-
-        {/* ====================================================== */}
-        {/* Main Content Area - Routes render components here */}
+        {/* Global Navbar for all pages */}
+        <Navbar />
+        
+        {/* Main Page Routing */}
         <Routes>
-          {/* Pass openContactModal function as a prop to these components */}
-          <Route path="/" element={<DocsPage openContactModal={openContactModal} />} />
-          <Route path="/docs" element={<DocsPage openContactModal={openContactModal} />} />
-
-          <Route path="/business" element={<BusinessPage openContactModal={openContactModal} />} />
-          <Route path="/individuals" element={<IndividualsPage openContactModal={openContactModal} />} />
-          <Route path="/pricing" element={<PricingPage openContactModal={openContactModal} />} />
-
-          {/* Login and Signup pages do not need the openContactModal prop */}
+          <Route path="/" element={<LandingPage openContactModal={openContactModal} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-
-          {/* Catch-all for 404 Not Found */}
           <Route path="*" element={
             <div className="content-area" style={{ padding: '50px', textAlign: 'center', minHeight: 'calc(100vh - 120px)' }}>
               <h2>404 - Page Not Found</h2>
@@ -169,14 +109,10 @@ function App() {
             </div>
           } />
         </Routes>
-        {/* ====================================================== */}
 
-
-        {/* ====================================================== */}
-        {/* Contact Modal (Visibility controlled by contactModalActive state) */}
-        {contactModalActive && ( // Render only if contactModalActive is true
+        {/* Contact Modal */}
+        {contactModalActive && (
           <div id="contactModal" className="active" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onClick={(e) => {
-            // Only close if clicking on the background overlay, not the modal content itself
             if (e.target.id === 'contactModal') {
               closeContactModal();
             }
@@ -185,7 +121,7 @@ function App() {
               <button className="close-btn" aria-label="Close contact form" onClick={closeContactModal}>&times;</button>
               <h3 id="modalTitle">Contact Us</h3>
               <p id="selectedPlanText" style={{ fontWeight: 600, marginBottom: 10 }}>
-                {selectedPlan ? `You selected the "${selectedPlan}" plan.` : ''} {/* Display selected plan */}
+                {selectedPlan ? `You selected the "${selectedPlan}" plan.` : ''}
               </p>
               <form id="contactForm">
                 <input type="text" id="name" name="name" placeholder="Your Full Name" required autoComplete="name" />
@@ -197,9 +133,8 @@ function App() {
             </div>
           </div>
         )}
-        {/* ====================================================== */}
 
-        {/* Custom Message Modal (for replacing alert) */}
+        {/* Message Modal */}
         {messageModalActive && (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -220,13 +155,10 @@ function App() {
           </div>
         )}
 
-        {/* ====================================================== */}
         {/* Footer */}
         <footer style={{ textAlign: 'center', padding: 20, borderTop: '1px solid var(--border)' }}>
           © 2025 RapidAlGO. All rights reserved.
         </footer>
-        {/* ====================================================== */}
-
       </div>
     </Router>
   );

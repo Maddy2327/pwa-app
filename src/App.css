@@ -16,18 +16,17 @@
 
 /* IMPORTANT FIX: Ensure html and #root (where React app mounts) take full height */
 html {
-  height: 100%; /* Makes html element take 100% height of the viewport */
-  background-color: var(--bg); /* Apply themed background directly to html */
+  height: 100%;
+  background-color: var(--bg);
 }
 
 #root {
-  height: 100%; /* Makes #root take 100% height of html */
-  width: 100%; /* Ensures #root spans full width */
-  display: flex; /* Use flexbox for #root to manage its child (.App) height */
-  flex-direction: column; /* Stack children vertically */
-  flex-grow: 1; /* Allow #root to grow if necessary */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
-
 
 * {
   box-sizing: border-box;
@@ -37,104 +36,22 @@ html {
 
 body {
   font-family: 'Segoe UI', sans-serif;
-  /* Removed background-color here as html will now handle the primary background */
   color: var(--text);
   transition: background 0.3s, color 0.3s;
-  min-height: 100vh; /* Ensures body is at least viewport height */
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Stacks children vertically */
+  flex-direction: column;
 }
 
-/* IMPORTANT FIX: Ensure the main .App container also follows the theme and fills its parent */
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100%; /* Changed from 100vh to 100% to fill #root's height */
-  width: 100%; /* Ensure it takes full width */
-  background-color: var(--bg); /* Apply the themed background color directly to the App container */
-  color: var(--text); /* Apply themed text color */
-  flex-grow: 1; /* Allow it to grow to fill #root */
-}
-
-
-/* Navbar */
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  flex-wrap: wrap;
-}
-
-nav h1 {
-  color: var(--accent);
-  font-size: 24px;
-  cursor: default;
-}
-
-.nav-menu {
-  display: flex; /* Default: visible on desktop, horizontal */
-  list-style: none;
-  gap: 20px;
-  align-items: center;
-}
-
-.nav-menu li a {
+  min-height: 100%;
+  width: 100%;
+  background-color: var(--bg);
   color: var(--text);
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 500;
-  padding: 10px 0;
-  display: block;
+  flex-grow: 1;
 }
-
-/* Buttons (General styles) */
-.btn, .theme-toggle {
-  padding: 10px 16px;
-  border-radius: 6px;
-  border: none;
-  font-weight: 600;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.btn {
-  background: var(--accent);
-  color: white;
-}
-
-.theme-toggle {
-  background: var(--accent);
-  color: white;
-}
-
-/* Hamburger Menu (Hidden by default on desktop) */
-.hamburger {
-  display: none;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: var(--text);
-  cursor: pointer;
-}
-
-/* Desktop Auth Buttons: Visible by default on desktop, hidden on mobile */
-.desktop-auth {
-  display: flex; /* Always flex on desktop */
-  gap: 10px;
-  align-items: center;
-}
-
-/* Mobile-only nav items: Hidden by default on desktop, visible on mobile */
-.mobile-only {
-  display: none; /* Always hidden on desktop */
-}
-
 
 /* Section Styling */
 section {
@@ -155,12 +72,11 @@ p {
 }
 
 .content-area {
-  flex-grow: 1; /* Allows it to take up remaining vertical space */
-  background-color: var(--bg); /* Apply the themed background color */
-  color: var(--text); /* Apply the themed text color */
-  padding-bottom: 50px; /* Add some padding if needed */
+  flex-grow: 1;
+  background-color: var(--bg);
+  color: var(--text);
+  padding-bottom: 50px;
 }
-
 
 /* Pricing Cards */
 .pricing-cards {
@@ -216,7 +132,7 @@ p {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(0,0,0,0.6);
-  display: none; /* Controlled by React state and active class */
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -290,74 +206,7 @@ p {
   font-weight: 700;
 }
 
-/* Responsive Design (Media Queries) */
-@media (max-width: 768px) {
-  .hamburger {
-    display: block; /* Show hamburger on mobile */
-  }
-
-  .nav-menu {
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    right: 0;
-    width: 100%;
-    background: var(--card-bg);
-    display: none; /* Will be set to 'flex' by App.js when active */
-    gap: 15px;
-    padding: 20px;
-    z-index: 99;
-    align-items: center; /* Center items horizontally within the menu */
-    padding-bottom: 30px; /* More space at the bottom of the menu */
-  }
-
-  .nav-menu.active {
-    display: flex; /* Display as flex when App.js state sets 'active' class */
-  }
-
-  .nav-menu li {
-    text-align: center;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .nav-menu li a {
-    padding: 12px 0;
-    width: 100%;
-  }
-
-  /* NEW: Style for the mobile-only auth buttons container */
-  .mobile-auth-container {
-    display: flex; /* Make this a horizontal flex container */
-    flex-direction: row; /* Ensure it's a row */
-    justify-content: space-around; /* Distribute space around the buttons */
-    align-items: center; /* Vertically center buttons */
-    width: 100%; /* Take full width of the menu */
-    margin-top: 15px; /* Add some space above the buttons */
-  }
-
-  .mobile-auth-container .menu-login,
-  .mobile-auth-container .menu-signup {
-    width: 45%; /* Give buttons a percentage width */
-    margin: 0; /* Remove auto margins as flexbox handles spacing */
-    /* Keep other button styles from .btn class */
-  }
-
-  /* Ensure the .mobile-only class applies to the new container only, and is visible on mobile */
-  .mobile-only {
-    display: block; /* Show the container on mobile */
-    width: 100%; /* The container takes full width */
-    text-align: center; /* This might not be strictly necessary here as flex takes over */
-  }
-
-
-  .desktop-auth {
-    display: none; /* Hide desktop auth buttons on mobile */
-  }
-}
-
-/* Login Page Specific Styles - Integrated previously from src/assets/login.css */
-/* These styles are applied to elements within LoginPage component */
+/* Login Page Specific Styles */
 .login-container {
   display: flex;
   flex-direction: row;
@@ -402,7 +251,7 @@ p {
   text-decoration: underline;
 }
 
-.login-container form label { /* Specificity for forms within login-container */
+.login-container form label {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
@@ -410,7 +259,7 @@ p {
   color: var(--text);
 }
 
-.login-container form input { /* Specificity for inputs within login-container */
+.login-container form input {
   width: 100%;
   padding: 12px;
   margin-bottom: 18px;
@@ -421,11 +270,11 @@ p {
   color: var(--text);
 }
 
-.login-container .password-group { /* Specificity for password group within login-container */
+.login-container .password-group {
   position: relative;
 }
 
-.login-container .password-group .toggle-password { /* Specificity for toggle-password within login-container */
+.login-container .password-group .toggle-password {
   position: absolute;
   right: 14px;
   top: 40px;
@@ -433,15 +282,15 @@ p {
   color: var(--text);
 }
 
-.login-container .forgot { /* Specificity for forgot within login-container */
+.login-container .forgot {
   text-align: right;
   margin-bottom: 20px;
 }
-.login-container .forgot a { /* Explicitly target forgot password link within login-container */
+.login-container .forgot a {
   color: var(--accent);
 }
 
-.login-container .btn { /* Specificity for buttons within login-container */
+.login-container .btn {
   width: 100%;
   padding: 12px;
   border: none;
@@ -451,23 +300,23 @@ p {
   cursor: pointer;
 }
 
-.login-container .btn a{ /* Specificity for links within buttons in login-container */
+.login-container .btn a{
   color:white;
   text-decoration: none;
 }
 
-.login-container .primary { /* Specificity for primary button within login-container */
+.login-container .primary {
   background: var(--accent);
   color: white;
 }
 
-.login-container .go{ /* Specificity for .go button within login-container */
+.login-container .go{
   background: var(--card-bg);
   color: var(--text);
   border: 1px solid var(--border);
 }
 
-.login-container .divider { /* Specificity for divider within login-container */
+.login-container .divider {
   display: flex;
   align-items: center;
   text-align: center;
@@ -476,14 +325,14 @@ p {
 }
 
 .login-container .divider::before,
-.login-container .divider::after { /* Specificity for divider pseudo-elements within login-container */
+.login-container .divider::after {
   content: "";
   flex: 1;
   height: 1px;
   background: var(--border);
 }
 
-.login-container .divider span { /* Specificity for divider text within login-container */
+.login-container .divider span {
   padding: 0 10px;
   background: var(--card-bg);
   color: var(--text);
@@ -519,9 +368,7 @@ p {
   }
 }
 
-
-/* Signup Page Specific Styles - Integrated previously from src/assets/signup.css */
-/* These styles are applied to elements within SignupPage component */
+/* Signup Page Specific Styles */
 .auth-container {
   display: flex;
   flex-direction: row;
@@ -608,8 +455,6 @@ p {
   color: var(--accent);
 }
 
-/* The divider styles are copied from login.css and already use variables where possible. */
-
 .btn.go {
   background: var(--card-bg);
   color: var(--text);
@@ -631,7 +476,6 @@ p {
 @media (max-width: 768px) {
   .auth-container {
     flex-direction: column;
-    margin: 20px auto;
   }
 
   .logo-box {
@@ -640,6 +484,231 @@ p {
 
   .form-box {
     width: 100%;
-    padding: 30px;
   }
+}
+
+/* Landing Page Styles */
+.landing-page .hero-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    min-height: calc(100vh - 150px);
+    text-align: left;
+    padding: 80px 20px;
+}
+
+.landing-page .hero-content {
+    max-width: 600px;
+}
+
+.landing-page .announcement {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--card-bg);
+    border-radius: 50px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    gap: 10px;
+    border: 1px solid var(--border);
+}
+
+.landing-page .create-api-small {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 5px 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    cursor: default;
+}
+
+.landing-page .announcement-link {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.landing-page .announcement-link:hover {
+    text-decoration: underline;
+    color: var(--accent);
+}
+
+.landing-page .hero-content h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    color: var(--accent);
+}
+
+.landing-page .hero-content h1 .blue-text {
+    color: var(--accent);
+}
+
+.landing-page .hero-content p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.landing-page .hero-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.landing-page .primary-btn {
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.landing-page .view-docs-link {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.landing-page .view-docs-link:hover {
+    color: var(--accent);
+}
+
+.landing-page .hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 400px;
+}
+
+.landing-page .hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.landing-page .animated-logo {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.landing-page .features-overview {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.landing-page .features-overview h2 {
+    font-size: 2.5em;
+    margin-bottom: 50px;
+}
+
+.landing-page .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.landing-page .feature-card {
+    background: var(--bg);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-align: left;
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.landing-page .feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.landing-page .feature-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: var(--accent);
+}
+
+.landing-page .feature-card p {
+    font-size: 1em;
+    margin-bottom: 0;
+}
+
+.landing-page .cta-section {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.landing-page .cta-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.landing-page .cta-section p {
+    font-size: 1.1em;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 900px) {
+    .landing-page .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .landing-page .hero-content {
+        max-width: 100%;
+    }
+
+    .landing-page .hero-content h1 {
+        font-size: 2.5em;
+    }
+
+    .landing-page .hero-content p {
+        font-size: 1em;
+    }
+
+    .landing-page .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .landing-page .primary-btn,
+    .landing-page .secondary-btn {
+        width: 80%;
+        max-width: 300px;
+    }
+
+    .landing-page .hero-image {
+        width: 80%;
+        height: auto;
+        max-width: 300px;
+    }
+
+    .landing-page .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-page .features-overview h2,
+    .landing-page .cta-section h2 {
+        font-size: 2em;
+    }
 }

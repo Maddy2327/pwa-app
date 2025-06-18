@@ -1,0 +1,335 @@
+/* Navbar.css */
+:root[data-theme="light"] {
+  --navbar-bg: #1a1a1a;
+  --navbar-text: #fff;
+  --dropdown-bg: #2a2a2a;
+  --card-bg: #3a3a3a;
+  --card-text: #ccc;
+  --auth-btn-bg: #333;
+  --auth-btn-text: #fff;
+  --logo-blue: #00bfff;
+  --whats-new-bg: #fff;
+  --whats-new-text: #000;
+}
+
+:root[data-theme="dark"] {
+  --navbar-bg: #1a1a1a;
+  --navbar-text: #fff;
+  --dropdown-bg: #2a2a2a;
+  --card-bg: #3a3a3a;
+  --card-text: #ccc;
+  --auth-btn-bg: #333;
+  --auth-btn-text: #fff;
+  --logo-blue: #00bfff;
+  --whats-new-bg: #fff;
+  --whats-new-text: #000;
+}
+
+.navbar {
+  width: 100%; /* Remove max-width and use full width */
+  padding: 20px 0; /* Remove left and right padding to eliminate spaces */
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--navbar-bg);
+  color: var(--navbar-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-left: 40px; /* Maintain some spacing from the left edge */
+}
+
+.logo .black { color: var(--navbar-text); }
+.logo .blue { color: var(--logo-blue); }
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-left: 50px;
+}
+
+.nav-item {
+  position: relative;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.nav-item-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--navbar-text);
+}
+
+.dropdown-icon {
+  font-size: 12px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 15px;
+  background: var(--dropdown-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  min-width: 320px;
+  z-index: 1000;
+}
+
+.dropdown-card {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--card-text);
+  transition: transform 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 90px;
+}
+
+.dropdown-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-icon {
+  font-size: 22px;
+  margin-right: 10px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-content strong {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.card-content p {
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 40px; /* Maintain some spacing from the right edge */
+}
+
+.auth-btn {
+  background-color: var(--auth-btn-bg);
+  color: var(--auth-btn-text);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#themeToggleBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.hamburger-icon {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--navbar-text);
+}
+
+.hamburger-menu-expanded {
+  display: none;
+}
+
+.nav-item-mobile {
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--navbar-text);
+}
+
+.dropdown-menu-mobile {
+  padding: 10px 20px;
+  background: var(--dropdown-bg);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-card-mobile {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--card-text);
+  margin-bottom: 0;
+}
+
+.whats-new-btn-mobile {
+  background-color: var(--whats-new-bg);
+  color: var(--whats-new-text);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.hamburger-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+@media (max-width: 1024px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--dropdown-bg);
+    padding: 20px;
+    z-index: 998;
+  }
+  .auth-buttons {
+    display: none;
+  }
+  .hamburger-icon {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  .hamburger-menu-expanded {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--dropdown-bg);
+    padding: 20px;
+    z-index: 998;
+  }
+}
+
+@media (min-width: 1025px) {
+  .navbar {
+    padding: 20px 0;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  .hamburger-icon {
+    display: none !important;
+  }
+  .hamburger-menu-expanded {
+    display: none;
+  }
+}
+
+/* Additional styles for API Key and Why RapidAIGO section */
+.api-key-section {
+  background: #000;
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.api-key-button {
+  background-color: var(--logo-blue); /* Match the blue color from the theme */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.api-key-link {
+  color: var(--logo-blue);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.why-rapid-section {
+  background: #333; /* Darker grey background */
+  padding: 40px 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.why-rapid-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--logo-blue);
+  margin-bottom: 30px;
+}
+
+.why-rapid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.why-rapid-card {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.why-rapid-card h3 {
+  font-size: 18px;
+  color: var(--logo-blue);
+  margin-bottom: 10px;
+}
+
+.why-rapid-card p {
+  font-size: 14px;
+  color: #ccc;
+  margin: 0;
+}
